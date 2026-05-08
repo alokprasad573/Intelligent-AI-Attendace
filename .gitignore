@@ -1,7 +1,14 @@
 .venv/
 
 .env
+.vscode
 
 src/components/__pycache__/
 src/screens/__pycache__/
 src/ui/__pycache__/
+
+.DS_Store
+
+.streamlit/
+
+dist/
