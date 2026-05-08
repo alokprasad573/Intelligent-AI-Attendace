@@ -1,28 +1,35 @@
 import streamlit as st
-
 from src.components.header import header_home
-from src.ui.style_base_layout import style_base_layout, style_bg_home
+from src.ui.style_base_layout import style_bg_home
+
 def home_screen():
-
-
-    header_home()
     style_bg_home()
-    style_base_layout()
+    header_home()
 
+    st.markdown("<p style='text-align:center; margin-bottom:40px;'>The AI-Powered Smart Attendance System</p>", unsafe_allow_html=True)
 
-    col1, col2 = st.columns(2, gap="large")
+    c1, c2 = st.columns(2)
 
-    with col1:
-        st.header("I'm Student")
-        st.image("https://i.ibb.co/844D9Lrt/mascot-student.png", width=120)
-        if st.button('Student Portal', type='primary', icon=':material/arrow_outward:', icon_position='right'):
-            st.session_state['login_type']='student'
+    with c1:
+        st.markdown("""
+            <div class="portal-card">
+                <img src="https://i.ibb.co/844D9Lrt/mascot-student.png" width="120">
+                <h2>Student</h2>
+                <p>Access your portal to mark attendance and track progress.</p>
+            </div>
+        """, unsafe_allow_html=True)
+        if st.button('Enter Student Portal', key='btn_student', type='primary'):
+            st.session_state['login_type'] = 'student'
             st.rerun()
 
-    with col2:
-        st.header("I'm Teacher")
-        st.image("https://i.ibb.co/CsmQQV6X/mascot-prof.png", width=145)
-        if st.button('Teacher Portal', type='primary', icon=':material/arrow_outward:', icon_position='right'):
-            st.session_state['login_type']='teacher'
+    with c2:
+        st.markdown("""
+            <div class="portal-card">
+                <img src="https://i.ibb.co/CsmQQV6X/mascot-prof.png" width="120">
+                <h2>Instructor</h2>
+                <p>Manage classes, verify attendance, and generate reports.</p>
+            </div>
+        """, unsafe_allow_html=True)
+        if st.button('Enter Instructor Portal', key='btn_teacher', type='primary'):
+            st.session_state['login_type'] = 'teacher'
             st.rerun()
-
