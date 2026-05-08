@@ -1,3 +1,7 @@
 .venv/
 
 .env
+
+src/components/__pycache__/
+src/screens/__pycache__/
+src/ui/__pycache__/
