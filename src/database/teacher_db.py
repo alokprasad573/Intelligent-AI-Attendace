@@ -50,9 +50,11 @@ class TeacherData:
                 "teacher_pass": hashed_password,
             }
 
-            supabase.table("teachers").insert(data).execute()
-
-            return True, "Registration Successful"
+            response = self.supabase.table("teachers").insert(data).execute()
+            if response.data:
+                message = f"Welcome {self.teacher_name.strip()}! Your faculty account has been created successfully. Your Teacher ID is {self.teacher_id}."
+                return True, message
+    
         except Exception as e:
             return False, f"Registration failed: {str(e)}"
 

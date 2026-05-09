@@ -1,16 +1,8 @@
 import random
-import bcrypt
 
 from src.database.config import supabase
 from src.pipelines.face_pipeline import get_face_embeddings
-
-
-
-def _generate_student_id():
-    """Generate a unique student ID. Called only during registration."""
-    number = random.randint(1, 9999)
-    student_id = f"S{number:04d}"
-    return student_id
+from src.pipelines.voice_pipeline import get_voice_embedding
 
 
 class StudentData:
@@ -18,21 +10,26 @@ class StudentData:
     def __init__(self, supabase=supabase, student_id=None, student_name=None,
                  image_array=None, audio_array=None):
         self.supabase = supabase
-        self.student_id = student_id
+        self.student_id = student_id 
         self.student_name = student_name
-        self.face_embeddings = get_face_embeddings(image_array)  # pass the image array
-        self.voice_embeddings = audio_array # pass the audio array
+        face_list = get_face_embeddings(image_array)
+        self.face_embeddings = face_list[0].tolist() if face_list else None
+        self.voice_embeddings = get_voice_embedding(audio_array) # pass the audio array
 
     def print(self):
-        self.student_id = _generate_student_id()
         return [self.student_id, self.student_name, self.face_embeddings, self.voice_embeddings]
 
 
     #register student
     def register(self):
         try:
-            self.student_id = _generate_student_id()
+            if not self.face_embeddings:
+                return False, "No face detected in the image. Please try again."
+            
+            if not self.voice_embeddings:
+                return False, "Voice processing failed. Please try again."
 
+            # Check if student already exists
             response = (
                 self.supabase
                 .table("students")
@@ -42,7 +39,7 @@ class StudentData:
             )
 
             if response.data:
-                return False, "Student ID already exists", None
+                return False, "Student ID already exists"
 
 
             # Insert data
@@ -52,11 +49,12 @@ class StudentData:
                 "face_embeddings": self.face_embeddings,
                 "voice_embeddings": self.voice_embeddings,
             }
-
+            print(data)
             response = self.supabase.table("students").insert(data).execute()
+            print(response)
             if response.data:
-                return True, "Registration Successful", response.data[0]
-            else:
-                return False, "Registration Failed", None
+                message = f"🎊 Welcome, {self.student_name.strip()}! Your student profile has been registered successfully. You can now proceed to login."
+                return True, message
+ 
         except Exception as e:
-            return False, f"An error occurred: {str(e)}", None
+            return False, f"An error occurred: {str(e)}"

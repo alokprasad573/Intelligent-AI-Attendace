@@ -1,5 +1,6 @@
 import streamlit as st
 import random
+import time
 from src.ui.style_base_layout import style_bg_dashboard, style_base_layout
 from src.components.header import header_dashboard
 from src.database.teacher_db import TeacherData
@@ -15,7 +16,12 @@ def generate_teacher_id():
 def teacher_screen_dashboard():
     _, center_col, _ = st.columns([2, 1.8, 2])
     with center_col:
-        st.markdown("<h2 style='text-align:center;'>Teacher Dashboard</h2>", unsafe_allow_html=True)
+        st.markdown("""
+            <div style = 'display:flex; flex-direction:column;align-items:center;' >
+                <img src="https://i.ibb.co/CsmQQV6X/mascot-prof.png" width="120">
+                <h2>👋 Welcome Back, Let's Begin Today's Session</h2>
+            </div>
+        """, unsafe_allow_html=True)
         if 'teacher_id' not in st.session_state:
             st.session_state['teacher_id'] = 'NA'
         if 'teacher_name' not in st.session_state:
@@ -69,7 +75,6 @@ def teacher_screen_login():
                 teacher = TeacherData()
                 success, message = teacher.login(teacher_id=teacher_id, password=teacher_pass)
                 if success: 
-                    st.success(message)
                     st.session_state.teacher_id = teacher.teacher_id
                     st.session_state.teacher_name = teacher.teacher_name
                     st.session_state.teacher_mob_no = teacher.teacher_mob_no
@@ -98,33 +103,41 @@ def teacher_screen_register():
         if 'teacher_id' not in st.session_state:
             st.session_state['teacher_id'] = generate_teacher_id()
 
-        with st.form("teacher_register_form"):
-            teacher_id=st.text_input("Assigned ID", value=st.session_state['teacher_id'], disabled=True)
-            teacher_name = st.text_input("Full Name")
-            teacher_mob_no = st.text_input("Mobile Number")
-            teacher_pass = st.text_input("Password", type='password')
-            teacher_conf_pass = st.text_input("Confirm", type='password')
-            
-            register = st.form_submit_button("Register Account")
+        if st.session_state.get('teacher_reg_success'):
+            st.success(st.session_state.get('teacher_reg_msg'))
+            if st.button("Proceed to Login", use_container_width=True):
+                st.session_state.teacher_reg_success = False
+                st.session_state.teacher_login_type = 'login'
+                st.rerun()
+        else:
+            with st.form("teacher_register_form"):
+                teacher_id = st.text_input("Assigned ID", value=st.session_state['teacher_id'], disabled=True)
+                teacher_name = st.text_input("Full Name")
+                teacher_mob_no = st.text_input("Mobile Number")
+                teacher_pass = st.text_input("Password", type='password')
+                teacher_conf_pass = st.text_input("Confirm", type='password')
+                
+                register = st.form_submit_button("Register Account")
 
-            if register:
-                teacher = TeacherData(
-                    teacher_id=teacher_id,
-                    teacher_name=teacher_name,
-                    teacher_mob_no=teacher_mob_no,
-                    teacher_pass=teacher_pass,
-                    teacher_conf_pass=teacher_conf_pass
-                )
-                success, message, data = teacher.register()
-                if success: 
-                    st.success(message)
-                    st.session_state.teacher_login_type = 'login'
-                else: 
-                    st.error(message)
+                if register:
+                    teacher = TeacherData(
+                        teacher_id=teacher_id,
+                        teacher_name=teacher_name,
+                        teacher_mob_no=teacher_mob_no,
+                        teacher_pass=teacher_pass,
+                        teacher_conf_pass=teacher_conf_pass
+                    )
+                    success, message = teacher.register()
+                    if success: 
+                        st.session_state.teacher_reg_success = True
+                        st.session_state.teacher_reg_msg = message
+                        st.rerun()
+                    else: 
+                        st.error(message)
 
-        if st.button("Back to Login", use_container_width=True):
-            st.session_state.teacher_login_type = 'login'
-            st.rerun()
+            if st.button("Back to Login", type='secondary', use_container_width=True):
+                st.session_state.teacher_login_type = 'login'
+                st.rerun()
 
 def teacher_screen():
     style_bg_dashboard()

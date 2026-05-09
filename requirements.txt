@@ -20,3 +20,7 @@ pillow
 
 # Frontend
 streamlit
+
+# Voice & Audio Processing
+librosa #audio preprocessor
+resemblyzer #audio model

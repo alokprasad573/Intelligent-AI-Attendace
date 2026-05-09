@@ -7,7 +7,12 @@ from src.ui.style_base_layout import style_bg_dashboard, style_base_layout
 from src.components.header import header_dashboard
 from src.database.student_db import StudentData
 
-generated_ids = set()
+
+def generate_student_id():
+    """Generate a unique student ID. Called only during registration."""
+    number = random.randint(1, 9999)
+    student_id = f"S{number:04d}"
+    return student_id
         
 def student_screen_dashboard():
     pass
@@ -58,27 +63,59 @@ def student_screen_register():
             </div>
         """, unsafe_allow_html=True)
         
-        with st.form("student_register_form"):
-            student_name = st.text_input("Full Name")
-            image = st.camera_input("Position your face in the frame to register your identity")
-            
-            register = st.form_submit_button("Register Account")
-            if register:
-                if image and student_name:
-                    try:
-                        img_array = np.array(Image.open(image))
-                        student = StudentData(student_name=student_name, image_array=img_array)
-                        print(student.print())
-                        # st.success("Registration Successful")
-                    except Exception as e:
-                        st.error(f"Failed to process image: {str(e)}")
+        if st.session_state.get('student_reg_success'):
+            st.success(st.session_state.get('student_reg_msg', ))
+            if st.button("Proceed to Login", use_container_width=True):
+                st.session_state.student_reg_success = False
+                st.session_state.student_login_type = 'login'
+                st.rerun()
+        else:
+            with st.form("student_register_form"):
+                student_name = st.text_input("Full Name")
+                image = st.camera_input("Position your face in the frame to register your identity")
+                voice = st.audio_input("Speak 5 times 'I am a student' to register your voice")
+                
+                register = st.form_submit_button("Register Account")
+                if register:
+                    # Validation
+                    if not student_name.strip():
+                        st.warning("Please enter your full name.")
+                    elif image is None:
+                        st.warning("Please capture your face image.")
+                    elif voice is None:
+                        st.warning("Please record your voice.")
+                    else:
+                        try:
+                            # Process image
+                            img = Image.open(image)
+                            img_array = np.array(img)
 
-                else:
-                    st.error("Please provide your name and face image")
-        
-        if st.button("Back to Login", use_container_width=True):
-            st.session_state.student_login_type = 'login'
-            st.rerun()
+                            # Process audio
+                            audio_bytes = voice.read()
+
+                            # Create student object
+                            student = StudentData(
+                                student_id=generate_student_id(),
+                                student_name=student_name.strip(),
+                                image_array=img_array,
+                                audio_array=audio_bytes
+                            )
+                            st.write(student.print())  
+                            # Register student
+                            with st.spinner("Processing face and voice biometrics..."):
+                                success, message = student.register()
+                                if success:
+                                    st.session_state.student_reg_success = True
+                                    st.session_state.student_reg_msg = message
+                                    st.rerun()
+                                else:
+                                    st.error(message)
+                        except Exception as e:
+                            st.error(f"Registration failed: {str(e)}")
+            
+            if st.button("Back to Login", use_container_width=True):
+                st.session_state.student_login_type = 'login'
+                st.rerun()
 
 def student_screen():
     style_bg_dashboard()
