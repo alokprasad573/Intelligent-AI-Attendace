@@ -26,10 +26,10 @@ def home_screen():
         st.markdown("""
             <div class="portal-card">
                 <img src="https://i.ibb.co/CsmQQV6X/mascot-prof.png" width="120">
-                <h2>Instructor</h2>
+                <h2>Teacher</h2>
                 <p>Manage classes, verify attendance, and generate reports.</p>
             </div>
         """, unsafe_allow_html=True)
-        if st.button('Enter Instructor Portal', key='btn_teacher', type='primary'):
+        if st.button('Enter Teacher Portal', key='btn_teacher', type='primary'):
             st.session_state['login_type'] = 'teacher'
             st.rerun()

@@ -19,75 +19,79 @@ class TeacherData:
     # ---------------- REGISTER ---------------- #
 
     def register(self):
+        try:
+            # Check if teacher already exists
+            response = (
+                self.supabase
+                .table("teachers")
+                .select("teacher_id")
+                .eq("teacher_id", self.teacher_id)
+                .execute()
+            )
 
-        # Check if teacher already exists
-        response = (
-            self.supabase
-            .table("teachers")
-            .select("teacher_id")
-            .eq("teacher_id", self.teacher_id)
-            .execute()
-        )
+            if response.data:
+                return False, "Teacher ID already exists"
 
-        if response.data:
-            return False, "Teacher ID already exists"
+            # Check password match
+            if self.teacher_pass != self.teacher_conf_pass:
+                return False, "Passwords do not match"
 
-        # Check password match
-        if self.teacher_pass != self.teacher_conf_pass:
-            return False, "Passwords do not match"
+            # Hash password
+            hashed_password = bcrypt.hashpw(
+                self.teacher_pass.encode("utf-8"),
+                bcrypt.gensalt()
+            ).decode("utf-8")
 
-        # Hash password
-        hashed_password = bcrypt.hashpw(
-            self.teacher_pass.encode("utf-8"),
-            bcrypt.gensalt()
-        ).decode("utf-8")
+            # Insert data
+            data = {
+                "teacher_id": self.teacher_id,
+                "teacher_name": self.teacher_name,
+                "teacher_mob_no": self.teacher_mob_no,
+                "teacher_pass": hashed_password,
+            }
 
-        # Insert data
-        data = {
-            "teacher_id": self.teacher_id,
-            "teacher_name": self.teacher_name,
-            "teacher_mob_no": self.teacher_mob_no,
-            "teacher_pass": hashed_password,
-        }
+            supabase.table("teachers").insert(data).execute()
 
-        supabase.table("teachers").insert(data).execute()
-
-        return True, "Registration Successful"
+            return True, "Registration Successful"
+        except Exception as e:
+            return False, f"Registration failed: {str(e)}"
 
     # ---------------- LOGIN ---------------- #
 
     def login(self, teacher_id, password):
+        try:
+            # Fetch teacher data
+            response = (
+                self.supabase
+                .table("teachers")
+                .select("*")
+                .eq("teacher_id", teacher_id)
+                .execute()
+            )
 
-        # Fetch teacher data
-        response = (
-            self.supabase
-            .table("teachers")
-            .select("*")
-            .eq("teacher_id", teacher_id)
-            .execute()
-        )
+            # Teacher not found
+            if not response.data:
+                return False, "Teacher ID not found"
 
-        # Teacher not found
-        if not response.data:
-            return False, "Teacher ID not found"
+            data = response.data[0]
 
-        data = response.data[0]
+            stored_password = data["teacher_pass"]
 
-        stored_password = data["teacher_pass"]
+            # Verify password
+            password_match = bcrypt.checkpw(
+                password.encode("utf-8"),
+                stored_password.encode("utf-8")
+            )
 
-        # Verify password
-        password_match = bcrypt.checkpw(
-            password.encode("utf-8"),
-            stored_password.encode("utf-8")
-        )
+            if not password_match:
+                return False, "Incorrect Password"
 
-        if not password_match:
-            return False, "Incorrect Password"
+            # Store data in class
+            self.teacher_id = data["teacher_id"]
+            self.teacher_name = data["teacher_name"]
+            self.teacher_mob_no = data["teacher_mob_no"]
+            self.teacher_pass = stored_password
 
-        # Store data in class
-        self.teacher_id = data["teacher_id"]
-        self.teacher_name = data["teacher_name"]
-        self.teacher_mob_no = data["teacher_mob_no"]
-        self.teacher_pass = stored_password
-
-        return True, "Login Successful"
+            return True, "Login Successful"
+        except Exception as e:
+            return False, f"Login failed: {str(e)}"
