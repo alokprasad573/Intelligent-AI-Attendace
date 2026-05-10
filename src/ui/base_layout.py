@@ -21,7 +21,6 @@ def style_background_home():
                 """
             ,unsafe_allow_html=True)
     
-
 def style_background_dashboard():
 
     st.markdown("""
@@ -76,8 +75,8 @@ def style_base_layout():
                 font-family: 'Outfit', sans-serif;    
             }
                 
-
-            button, form_submit_button{
+            
+            button{
                 border-radius: 1.5rem !important;
                 background-color: #5865F2 !important;
                 color: white !important;
@@ -87,7 +86,6 @@ def style_base_layout():
                 }
 
             button[kind="secondary"]{
-                border-radius: 1.5rem !important;
                 background-color: #EB459E !important;
                 color: white !important;
                 padding: 10px 20px !important;

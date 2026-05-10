@@ -3,7 +3,7 @@ from src.databases.config import supabase
 import bcrypt
 
     
-# check if already exists
+# check is teacher already registered
 def check_teacher_exists(t_id, t_email_id, t_mobile_number):
     # check for unique id, email_id, mobile_number in the database return already exists or taken
     response = supabase.table("teachers").select("*").eq("id", t_id).execute()
@@ -21,7 +21,7 @@ def check_teacher_exists(t_id, t_email_id, t_mobile_number):
     return True, "Teacher account does not exist"
     
 
-# register function
+# tecaher registeration function
 def create_teacher_account(t_id, t_name, t_email, t_number, t_gender, t_password):
     try:
         data = {
@@ -41,7 +41,7 @@ def create_teacher_account(t_id, t_name, t_email, t_number, t_gender, t_password
     except Exception as e:
         return False, str(e)
    
-# login fuction 
+# teacher login function 
 def teacher_login(t_id, t_password):
     try:
         response = supabase.table("teachers").select("*").eq("id", t_id).execute()
@@ -64,6 +64,11 @@ def teacher_login(t_id, t_password):
     except Exception as e:
         return False, str(e), None
     
+    
+# fetch data of all students
+def get_all_students():
+    response = supabase.table('students').select("*").execute()
+    return response.data
     
     
     

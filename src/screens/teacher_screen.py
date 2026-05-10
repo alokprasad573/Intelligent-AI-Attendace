@@ -7,7 +7,7 @@ from src.ui.base_layout import style_base_layout, style_background_dashboard
 # pyrefly: ignore [missing-import]
 from src.databases.db import create_teacher_account, check_teacher_exists, teacher_login
 
-def generate_id():
+def generate_teacher_id():
     number = random.randint(1000, 9999)
     tid = "T" + str(number)
     return tid
@@ -25,15 +25,15 @@ def teacher_screen_register():
             st.rerun()
     
     
-    st.header("Register as a Teacher", anchor="center")
+    st.header("Teacher Registration", anchor="center")
+    if 'generated_teacher_id' not in st.session_state:
+        st.session_state['generated_teacher_id'] = generate_teacher_id()
     
-    if 'generated_id' not in st.session_state:
-        st.session_state['generated_id'] = generate_id()
-        st.rerun()
+    t_id = st.session_state['generated_teacher_id']
+    st.subheader(f"Assigned Teacher ID: {t_id}")
+    
 
     with st.form("teacher_register_form", border=False):
-        
-        t_id = st.text_input("Assigned Teacher ID", value=st.session_state['generated_id'], key="t_id", disabled=True)
         t_name = st.text_input("Enter your Name", key="t_name", placeholder="John Doe")
         t_email_id = st.text_input("Enter your Email", key="t_email", placeholder="john@example.com")
         t_mobile_number = st.text_input("Enter your Mobile Number", key="t_number", placeholder="10-digit mobile number", max_chars=10)
@@ -42,10 +42,10 @@ def teacher_screen_register():
         t_confirm_password = st.text_input("Confirm your password", type="password", key="t_confirm_pass", placeholder="Repeat your password")
         
         st.divider()
-
+        print("Teacher ID: ", t_id)
         btn1, btn2 = st.columns(2)
         with btn1:
-            if st.form_submit_button("Register Account", icon=":material/app_registration:", use_container_width=True):
+            if st.form_submit_button("Register Account", icon=":material/app_registration:", type="primary", use_container_width=True):
                 with st.spinner("Please Wait..."):
                     if not all([t_name, t_email_id, t_mobile_number, t_gender, t_password, t_confirm_password]) or t_gender == 'Select':
                         st.error("Please fill in all the required fields.")
@@ -77,7 +77,7 @@ def teacher_screen_register():
                         # st.rerun()
                     
         with btn2:
-            if st.form_submit_button("Back to Login", icon=":material/login:", type="secondary", use_container_width=True):
+            if st.form_submit_button("Back to Login", icon=":material/login:", type="primary", use_container_width=True):
                 st.session_state.teacher_login_type = 'login'
                 st.rerun()
 
@@ -94,7 +94,7 @@ def teacher_screen_login():
             st.session_state["role"] = None
             st.rerun()
 
-    st.header("Login in to your account", anchor="center")
+    st.header("Teacher Login", anchor="center")
 
     with st.form("teacher_login_form", border=False):
         t_id = st.text_input("Enter Teacher ID", placeholder="Ex - T4567")
@@ -102,9 +102,9 @@ def teacher_screen_login():
 
         st.divider()
 
-        btn1, btn2 = st.columns(2)
+        btn1, btn2 = st.columns(2, gap="large")
         with btn1:
-            if st.form_submit_button("Login", icon=":material/login:", use_container_width=True):
+            if st.form_submit_button("Login", icon=":material/login:", type="primary", use_container_width=True):
                 if not t_id or not t_password:
                     st.error("Please enter both Teacher ID and password")
                     return
@@ -119,7 +119,7 @@ def teacher_screen_login():
                         st.error(message)
         
         with btn2:
-            if st.form_submit_button("Don't have an account? Register", icon=":material/app_registration:", type="secondary", use_container_width=True):
+            if st.form_submit_button("Don't have an account? Register", icon=":material/app_registration:", type="primary", use_container_width=True):
                 st.session_state.teacher_login_type = 'register'
                 st.rerun()
 
