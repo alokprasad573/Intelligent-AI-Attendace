@@ -3,22 +3,25 @@ from src.databases.config import supabase
 import bcrypt
 
     
-# check is teacher already registered
-def check_teacher_exists(t_id, t_email_id, t_mobile_number):
+# check is duplicates already registered
+def check_duplicates(table, id, email_id, mobile_number):
     # check for unique id, email_id, mobile_number in the database return already exists or taken
-    response = supabase.table("teachers").select("*").eq("id", t_id).execute()
+    response = supabase.table(table).select("*").eq("id", id).execute()
     if len(response.data) > 0:
         return False, "You are already registerd."
     
-    response = supabase.table("teachers").select("*").eq("email_id", t_email_id).execute()
+    response = supabase.table(table).select("*").eq("email_id", email_id).execute()
     if len(response.data) > 0:
         return False, "This email id is already registered."
     
-    response = supabase.table("teachers").select("*").eq("mobile_number", t_mobile_number).execute()
+    response = supabase.table(table).select("*").eq("mobile_number", mobile_number).execute()
     if len(response.data) > 0:
         return False, "This mobile number is already registered."
     
-    return True, "Teacher account does not exist"
+    if table == "teachers":
+        return True, "Teacher account does not exist"
+    elif table == "students":
+        return True, "Student account does not exist"
     
 
 # tecaher registeration function
@@ -69,6 +72,30 @@ def teacher_login(t_id, t_password):
 def get_all_students():
     response = supabase.table('students').select("*").execute()
     return response.data
+
+# student enrollment
+def create_student_account(s_id, s_name, s_email_id, s_mobile_number, s_age, s_gender, s_face_embbedings, s_voice_embbedings):
+    try:
+        data = {
+            "id": s_id,
+            "name": s_name.lower(),
+            "email_id": s_email_id,
+            "mobile_number": s_mobile_number,
+            "age": int(s_age),
+            "gender": s_gender.lower(),
+            "face_embeddings": s_face_embbedings,
+            "voice_embeddings": s_voice_embbedings
+        }
+        try:
+            response = supabase.table("students").insert(data).execute()
+        except Exception as e:
+            return False, str(e)
+            
+        return True, f"Success! Your student account has been created.Student ID is {s_id}. Please Login now. 🔐"
+    except Exception as e:
+        return False, str(e)
+    
+     
     
     
     
