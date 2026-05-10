@@ -5,7 +5,7 @@ from src.components.header import header_dashboard, header_home
 from src.ui.base_layout import style_base_layout, style_background_dashboard
 
 # pyrefly: ignore [missing-import]
-from src.databases.db import create_teacher_account, check_teacher_exists, teacher_login
+from src.databases.db import create_teacher_account, check_duplicates, teacher_login
 
 def generate_teacher_id():
     number = random.randint(1000, 9999)
@@ -14,7 +14,7 @@ def generate_teacher_id():
 
 
 # Teacher Register Part
-def teacher_screen_register():
+def teacher_register_form():
     c1, c2 = st.columns(2, vertical_alignment="center", gap="large")
     with c1:
         header_dashboard()
@@ -24,7 +24,6 @@ def teacher_screen_register():
             st.session_state["role"] = None
             st.rerun()
     
-    
     st.header("Teacher Registration", anchor="center")
     if 'generated_teacher_id' not in st.session_state:
         st.session_state['generated_teacher_id'] = generate_teacher_id()
@@ -32,17 +31,16 @@ def teacher_screen_register():
     t_id = st.session_state['generated_teacher_id']
     st.subheader(f"Assigned Teacher ID: {t_id}")
     
-
     with st.form("teacher_register_form", border=False):
         t_name = st.text_input("Enter your Name", key="t_name", placeholder="John Doe")
-        t_email_id = st.text_input("Enter your Email", key="t_email", placeholder="john@example.com")
-        t_mobile_number = st.text_input("Enter your Mobile Number", key="t_number", placeholder="10-digit mobile number", max_chars=10)
+        t_email_id = st.text_input("Enter your Email", key="t_email_id", placeholder="john@example.com")
+        t_mobile_number = st.text_input("Enter your Mobile Number", key="t_mobile_number", placeholder="10-digit mobile number", max_chars=10)
         t_gender = st.selectbox("Select your Gender", ['Select','Male', 'Female', 'Other'], key="t_gender")
-        t_password = st.text_input("Enter your password", type="password", key="t_pass", placeholder="Choose a strong password")
-        t_confirm_password = st.text_input("Confirm your password", type="password", key="t_confirm_pass", placeholder="Repeat your password")
+        t_password = st.text_input("Enter your password", type="password", key="t_password", placeholder="Choose a strong password")
+        t_confirm_password = st.text_input("Confirm your password", type="password", key="t_confirm_password", placeholder="Repeat your password")
         
         st.divider()
-        print("Teacher ID: ", t_id)
+        
         btn1, btn2 = st.columns(2)
         with btn1:
             if st.form_submit_button("Register Account", icon=":material/app_registration:", type="primary", use_container_width=True):
@@ -59,31 +57,31 @@ def teacher_screen_register():
                         st.error("Passwords do not match. Please try again.")
                         return
                     
-                    success, message = check_teacher_exists(t_id, t_email_id, t_mobile_number)
+                    if len(t_mobile_number) != 10:
+                        st.error("Mobile number must be 10 digits long.")
+                        return
+                    
+                    success, message = check_duplicates("teachers", t_id, t_email_id, t_mobile_number)
                     if success:
                         success, message = create_teacher_account(t_id, t_name, t_email_id, t_mobile_number, t_gender, t_password)
                         if success:
                             st.success(message)
-                            # st.session_state.teacher_login_type = 'login'
-                            # time.sleep(3)
-                            # st.rerun()
+                            st.session_state.is_registered = True
+                            time.sleep(2)
+                            st.rerun()
                         else:
                             st.error(message)
-                            # time.sleep(3)
-                            # st.rerun()
                     else:
                         st.error(message)
-                        # time.sleep(3)
-                        # st.rerun()
                     
         with btn2:
-            if st.form_submit_button("Back to Login", icon=":material/login:", type="primary", use_container_width=True):
-                st.session_state.teacher_login_type = 'login'
+            if st.form_submit_button("Back to Login", icon=":material/login:", type="secondary", use_container_width=True):
+                st.session_state.is_registered = True
                 st.rerun()
 
 
 # Teacher Login Part
-def teacher_screen_login():
+def teacher_login_form():
     c1, c2 = st.columns(2, vertical_alignment="center", gap="large")
 
     with c1:
@@ -113,14 +111,17 @@ def teacher_screen_login():
                     success, message, data = teacher_login(t_id, t_password)
                     if success:
                         st.success(message)
-                        # time.sleep(1)
-                        # st.rerun()
+                        st.session_state.is_loggedin = True
+                        st.session_state.user_type = "teacher"
+                        st.session_state.teacher_data = data
+                        time.sleep(1)
+                        st.rerun()
                     else:
                         st.error(message)
         
         with btn2:
-            if st.form_submit_button("Don't have an account? Register", icon=":material/app_registration:", type="primary", use_container_width=True):
-                st.session_state.teacher_login_type = 'register'
+            if st.form_submit_button("Don't have an account? Register", icon=":material/app_registration:", type="secondary", use_container_width=True):
+                st.session_state.is_registered = False
                 st.rerun()
 
 
@@ -128,7 +129,7 @@ def teacher_screen():
     style_base_layout()
     style_background_dashboard()
     
-    if 'teacher_login_type' not in st.session_state or st.session_state.teacher_login_type=="register":
-        teacher_screen_register()
+    if st.session_state.get('is_registered', True):
+        teacher_login_form()
     else:
-        teacher_screen_login()
+        teacher_register_form()

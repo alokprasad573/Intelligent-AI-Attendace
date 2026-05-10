@@ -25,8 +25,8 @@ def get_face_embbedings(image_array):
     embeddings = []
     for face in faces:
         landmarks = sp(image_array, face)
-        embedding = face_recognizer.compute_face_descriptor(image_array, landmarks, 1) # 128 embbedings
-        embeddings.append(np.array(embedding))
+        embedding = face_recognizer.compute_face_descriptor(image_array, landmarks, 1) # 128 embeddings
+        embeddings.append(np.array(embedding).tolist())
     
     return embeddings
 
