@@ -29,7 +29,7 @@ def manage_subjects(teacher_data):
                     
             subject_card(
                 code = sub['code'],
-                name = sub['name'],
+                name = sub['name'].title(),
                 section = sub['section'],
                 stats=stats,
                 footer_callback=share_btn

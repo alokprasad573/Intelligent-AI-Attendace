@@ -1,13 +1,11 @@
 import dlib 
-import numpy as ns 
 import face_recognition_models
 import streamlit as st
 import numpy as np
-from sklearn.svm import SVC 
+from sklearn.neighbors import KNeighborsClassifier
 from src.databases.db import get_all_students
 
-
-
+from PIL import Image, ImageEnhance
 
 # Loading dlib models
 @st.cache_resource
@@ -17,10 +15,37 @@ def load_dlib_models():
     face_recognizer = dlib.face_recognition_model_v1(face_recognition_models.face_recognition_model_location())
     return detector, sp, face_recognizer
 
+def preprocess_image(image_array):
+    # Convert numpy array to PIL Image
+    img = Image.fromarray(image_array)
+    
+    # Enhance contrast
+    enhancer = ImageEnhance.Contrast(img)
+    img = enhancer.enhance(1.5)
+    
+    # Enhance brightness slightly
+    enhancer = ImageEnhance.Brightness(img)
+    img = enhancer.enhance(1.1)
+    
+    return np.array(img)
+
 # getting face embeddings
 def get_face_embbedings(image_array):
     detector, sp, face_recognizer = load_dlib_models()
+    
+    # Try with original image
     faces = detector(image_array, 1)
+    
+    # If no faces found, try with preprocessed image
+    if len(faces) == 0:
+        enhanced_image = preprocess_image(image_array)
+        faces = detector(enhanced_image, 1)
+        if len(faces) > 0:
+            image_array = enhanced_image
+            
+    # If still no faces found, try upsampling more (slower but better for small faces)
+    if len(faces) == 0:
+        faces = detector(image_array, 2)
     
     embeddings = []
     for face in faces:
@@ -42,21 +67,24 @@ def get_trained_model():
         return None
     
     for student in student_db:
-        embedding = student['face_embeddings']
-        if embedding:
-            X.append(np.array(embedding))
+        embeddings = student.get('face_embeddings', [])
+        if embeddings and isinstance(embeddings, list):
+            # Take the first embedding if it's a list of embeddings
+            first_embedding = embeddings[0] if isinstance(embeddings[0], list) else embeddings
+            X.append(np.array(first_embedding))
             y.append(student['id'])
     
     if len(X) == 0:
         return None
     
-    clf = SVC(kernel='linear', probability=True, class_weight='balanced')
+    # KNN works even with a single class
+    clf = KNeighborsClassifier(n_neighbors=1, metric='euclidean')
     try:
-        clf.fit(X,y)
-    except ValueError:
-        pass
-    
-    return {'clf': clf, 'X': X, 'y': y}
+        clf.fit(X, y)
+        return {'clf': clf, 'X': X, 'y': y}
+    except Exception as e:
+        st.error(f"Error training model: {e}")
+        return None
     
 def train_classifier():
     st.cache_resource.clear()
@@ -74,23 +102,18 @@ def predict_attendance(class_image_array):
         return detected_student, [], len(embeddings)
     
     clf = model_data['clf']
-    X_train = model_data['X']
     y_train = model_data['y']
     
     all_students = sorted(list(set(y_train)))
     
+    resemblance_threshold = 0.6
+    
     for embedding in embeddings:
-        if len(all_students) >= 2:
-            print(clf.predict([embedding])[0])
-            predicted_id = clf.predict([embedding])[0]
-        else:
-            predicted_id = all_students[0]
-            
-        student_embedding = X_train[y_train.index(predicted_id)]
+        # Use KNN to find the nearest neighbor and its distance
+        distances, indices = clf.kneighbors([embedding], n_neighbors=1)
         
-        best_match_score = np.linalg.norm(student_embedding - embedding)
-        
-        resemblance_threshold = 0.6
+        best_match_score = distances[0][0]
+        predicted_id = clf.classes_[indices[0][0]]
         
         if best_match_score <= resemblance_threshold:
             detected_student[predicted_id] = True

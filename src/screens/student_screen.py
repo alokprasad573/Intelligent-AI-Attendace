@@ -8,7 +8,7 @@ from PIL import Image
 import numpy as np
 
 from src.databases.db import get_all_students, check_duplicates, create_student_account, get_enrolled_subjects, get_student_attendance, unenroll_student_to_subject
-from src.pipelines.face_recognition_pipeline import predict_attendance, get_face_embbedings
+from src.pipelines.face_recognition_pipeline import predict_attendance, get_face_embbedings, train_classifier
 from src.components.dialog_enroll_subject import enroll_dialog
 from src.components.subject_cards import subject_card
 
@@ -104,13 +104,13 @@ def student_dashboard():
         stats = stats_map.get(sid, {"total": 0, "attended": 0})
        
         def unenroll_button(s_name=sub['name'], s_id=sub['id']):
-            if st.button(f"Unenroll from {s_name}", type='tertiary', width='stretch', icon=':material/delete_forever:', key=f"unenroll_{s_id}"):
+            if st.button(f"Unenroll from this subject.", type='tertiary', width='stretch', icon=':material/delete_forever:', key=f"unenroll_{s_id}"):
                 unenroll_student_to_subject(id, s_id)
                 st.rerun()
 
         with cols[i % 2]:
             subject_card(
-                name=sub['name'],
+                name=sub['name'].title(),
                 code=sub['code'],
                 section=sub['section'],
                 stats=[
@@ -170,7 +170,7 @@ def student_register_form():
                 st.error("Age must be between 5 and 100.")
                 return
 
-            image = Image.open(picture)
+            image = Image.open(picture).convert("RGB")
             image_array = np.array(image)
             
             with st.spinner("Please Wait..."):
@@ -194,6 +194,7 @@ def student_register_form():
                 if success:
                     success, message = create_student_account(student_data)
                     if success:
+                        train_classifier() # retraining the model with new student
                         st.success(message)
                         st.session_state.is_registered = True
                         st.rerun()
@@ -219,7 +220,7 @@ def student_login_form():
     picture = st.camera_input("Position your face in the center", disabled=not enable)
 
     if picture:
-        image = Image.open(picture)
+        image = Image.open(picture).convert("RGB")
         image_array = np.array(image)
             
         with st.spinner('AI is scanning...'):
