@@ -150,7 +150,7 @@ def student_register_form():
         with input_col2:
             s_gender = st.selectbox("Gender", ["Select", "Male", "Female", "Other"])
             
-        enable = st.checkbox("Enable camera", value=True)
+        enable = st.checkbox("Enable camera", value=False)
         st.write("Enable camera to enroll your face.")
         picture = st.camera_input("Position your face in the center", disabled=not enable, key="s_camera_input")
         
