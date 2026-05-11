@@ -1,6 +1,6 @@
 # Intelligent AI Attendance with Face Recognition
 
-**SmartRoll** is a modern, AI-powered attendance management system that leverages Face Recognition to provide a seamless and secure attendance-tracking experience. Built with Streamlit and Supabase, it offers dedicated portals for both teachers and students.
+**SmartRoll** is a modern, AI-powered attendance management system that leverages Face Recognition to provide a seamless and secure attendance-tracking experience. Built with Streamlit, Supabase and KNN classifier, it offers dedicated portals for both teachers and students.
 
 ---
 
