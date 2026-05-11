@@ -7,7 +7,7 @@ import streamlit as st
 def main():
     st.set_page_config(
         page_title='SmartRoll - Making Attendance faster using AI',
-        page_icon= "https://i.ibb.co/9P5TwcB/app-icon.png"
+        page_icon= "https://i.ibb.co/vvmw0d7R/app-icon.png"
     )
     if 'role' not in st.session_state:
         st.session_state['role'] = None

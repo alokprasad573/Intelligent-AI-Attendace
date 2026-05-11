@@ -3,7 +3,7 @@ import streamlit as st
 
 def header_home():
 
-    logo_url = "https://i.ibb.co/9P5TwcB/app-icon.png"
+    logo_url = "https://i.ibb.co/vvmw0d7R/app-icon.png"
     
     st.markdown(f"""
         <div style="display:flex; flex-direction:row; align-items:center; justify-content:center; margin-bottom:30px; margin-top:30px">
@@ -16,7 +16,7 @@ def header_home():
 
 def header_dashboard():
 
-    logo_url = "https://i.ibb.co/9P5TwcB/app-icon.png"
+    logo_url = "https://i.ibb.co/vvmw0d7R/app-icon.png"
     
     st.markdown(f"""
         <div style="display:flex; flex-direction:row; align-items:center; justify-content:center; margin-bottom:30px; margin-top:30px; gap:10px">
