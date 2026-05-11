@@ -2,9 +2,9 @@ import streamlit as st
 import segno
 import io
 
-@st.dialog("Share Class Link")
+@st.dialog("Share Class Link", width="medium")
 def share_dialog_box(s_name, s_code):
-    app_domain = 'http://localhost:8501/'
+    app_domain = 'http://localhost:8501'
     join_url = f"{app_domain}/?join-class={s_code}"
     
     st.subheader(f"Scan to join {s_name}")
@@ -24,5 +24,5 @@ def share_dialog_box(s_name, s_code):
         
     with col2:
         st.markdown("### Scan to join")
-        st.image(png_io.getvalue(), use_container_width=True, caption=f'QR Code to join class of {s_name}')
+        st.image(png_io.getvalue(), width="stretch", caption=f'QR Code to join class of {s_name}')
     

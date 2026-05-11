@@ -226,7 +226,7 @@ def enroll_in_subject(student_id, subject_id):
                 )
                 .execute()
             )
-            return True, "Successfully enrolled in the subject."
+            return True, "You are successfully enrolled in this subject."
     except Exception as e:
         return False, str(e)
 

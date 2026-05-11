@@ -1,8 +1,8 @@
 import streamlit as st
 
-from src.components.create_subjects import create_subjects
+from src.components.dialog_create_subjects import create_subjects
 from src.components.subject_cards import subject_card
-from src.components.share_subject_qr import share_dialog_box
+from src.components.dialog_share_subject_qr import share_dialog_box
 from src.databases.db import get_all_subjects_by_teacher
 
 def manage_subjects(teacher_data):
@@ -24,7 +24,7 @@ def manage_subjects(teacher_data):
             ]
             
             def share_btn(s_name=sub['name'], s_code=sub['code']):
-                if st.button(f"Share QR Code: {s_name}", type='primary',key=f"share_{s_code}", icon=":material/share:", use_container_width=True):
+                if st.button(f"Share QR Code: {s_name}", type='primary',key=f"share_{s_code}", icon=":material/share:", width="stretch"):
                     share_dialog_box(s_name, s_code)
                     
             subject_card(

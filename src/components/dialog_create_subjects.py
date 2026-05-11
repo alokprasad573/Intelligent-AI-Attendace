@@ -2,7 +2,7 @@ import streamlit as st
 
 from src.databases.db import create_subject_now
 
-@st.dialog("Create New Subject", width="large")
+@st.dialog("Create New Subject", width="small")
 def create_subjects(teacher_id):
     
     st.write("Enter the details of new subject")

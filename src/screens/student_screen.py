@@ -10,7 +10,7 @@ import numpy as np
 from src.databases.db import get_all_students, check_duplicates, create_student_account, get_enrolled_subjects, get_student_attendance, unenroll_student_to_subject
 from src.pipelines.face_recognition_pipeline import predict_attendance, get_face_embbedings
 from src.pipelines.voice_recognition_pipeline import get_voice_embeddings
-from src.components.enroll_subject import enroll_dialog
+from src.components.dialog_enroll_subject import enroll_dialog
 from src.components.subject_cards import subject_card
 
 def generate_student_id():
@@ -159,7 +159,7 @@ def student_register_form():
         st.write("Enable microphone to enroll your voice.")
         audio_value = st.audio_input("Speak 'I am a student' five times.", sample_rate=16000, key="s_audio_input")
         
-        if st.form_submit_button("Register", icon=":material/app_registration:", type="primary", use_container_width=True, key="registerbtn"):
+        if st.form_submit_button("Register", icon=":material/app_registration:", type="primary", width="stretch", key="registerbtn"):
             if not picture:
                 st.error("Please capture your face.")
                 return
@@ -254,7 +254,7 @@ def student_login_form():
                         
                 else:
                     st.info('Face not recognized! You might be a new student!')
-                    if st.button("Don't have an account? Register", icon=":material/app_registration:", type="primary", use_container_width=True, key="registerbtn"):
+                    if st.button("Don't have an account? Register", icon=":material/app_registration:", type="primary", width="stretch", key="registerbtn"):
                         st.session_state.is_registered = False
                         st.rerun()
     

@@ -12,7 +12,7 @@ def enroll_dialog(student_id):
     st.write("Enter the details of new subject")
     subject_code = st.text_input("Subject Code", placeholder="Enter the Subject Code. Eg. CS101")
     
-    if st.button("Enroll Now", type="primary", width="stretch", use_container_width=True):
+    if st.button("Enroll Now", type="primary", width="stretch"):
         if subject_code:
             # check subject exist or not 
             success, subject = get_subject_id(subject_code)

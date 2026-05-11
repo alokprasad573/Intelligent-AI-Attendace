@@ -198,7 +198,7 @@ def teacher_register_form():
                 "Register Account",
                 icon=":material/app_registration:",
                 type="primary",
-                use_container_width=True,
+                width="stretch",
             ):
                 with st.spinner("Please Wait..."):
                     if (
@@ -255,7 +255,7 @@ def teacher_register_form():
                 "Back to Login",
                 icon=":material/login:",
                 type="secondary",
-                use_container_width=True,
+                width="stretch",
             ):
                 st.session_state.is_registered = True
                 st.rerun()
@@ -305,7 +305,7 @@ def teacher_login_form():
                 "Login",
                 icon=":material/login:",
                 type="primary",
-                use_container_width=True,
+                width="stretch",
             ):
                 if not t_id or not t_password:
                     st.error("Please enter both Teacher ID and password")
@@ -326,7 +326,7 @@ def teacher_login_form():
                 "Don't have an account? Register",
                 icon=":material/app_registration:",
                 type="secondary",
-                use_container_width=True,
+                width="stretch",
             ):
                 st.session_state.is_registered = False
                 st.rerun()
