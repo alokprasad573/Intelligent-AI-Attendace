@@ -9,7 +9,6 @@ import numpy as np
 
 from src.databases.db import get_all_students, check_duplicates, create_student_account, get_enrolled_subjects, get_student_attendance, unenroll_student_to_subject
 from src.pipelines.face_recognition_pipeline import predict_attendance, get_face_embbedings
-from src.pipelines.voice_recognition_pipeline import get_voice_embeddings
 from src.components.dialog_enroll_subject import enroll_dialog
 from src.components.subject_cards import subject_card
 
@@ -155,16 +154,11 @@ def student_register_form():
         st.write("Enable camera to enroll your face.")
         picture = st.camera_input("Position your face in the center", disabled=not enable, key="s_camera_input")
         
-        enable = st.checkbox("Enable microphone", value=True)
-        st.write("Enable microphone to enroll your voice.")
-        audio_value = st.audio_input("Speak 'I am a student' five times.", sample_rate=16000, key="s_audio_input")
+       
         
         if st.form_submit_button("Register", icon=":material/app_registration:", type="primary", width="stretch", key="registerbtn"):
             if not picture:
                 st.error("Please capture your face.")
-                return
-            if not audio_value:
-                st.error("Please record your voice.")
                 return
             if not s_name or not s_email_id or not s_mobile_number or not s_age or not s_gender:
                 st.error("Please fill in all the required fields.")
@@ -178,17 +172,12 @@ def student_register_form():
 
             image = Image.open(picture)
             image_array = np.array(image)
-            audio_bytes = audio_value.read()
             
             with st.spinner("Please Wait..."):
                 s_face_embbedings = get_face_embbedings(image_array)
-                s_voice_embbedings = get_voice_embeddings(audio_bytes)
                 
                 if not s_face_embbedings:
                     st.error("Could not extract face embeddings. Please try again.")
-                    return
-                if not s_voice_embbedings:
-                    st.error("Could not extract voice embeddings. Please try again.")
                     return
                 
                 student_data = {
@@ -199,7 +188,6 @@ def student_register_form():
                     "age": s_age,
                     "gender": s_gender.lower(),
                     "face_embeddings": s_face_embbedings,
-                    "voice_embeddings": s_voice_embbedings
                 }
                 
                 success, message = check_duplicates("students", student_data)

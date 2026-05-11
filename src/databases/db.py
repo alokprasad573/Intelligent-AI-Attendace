@@ -108,7 +108,6 @@ def create_student_account(data_dict):
             "age": data_dict["age"],
             "gender": data_dict["gender"],
             "face_embeddings": data_dict["face_embeddings"],
-            "voice_embeddings": data_dict["voice_embeddings"],
         }
         try:
             response = supabase.table("students").insert(data).execute()
@@ -259,4 +258,40 @@ def get_student_attendance(student_id):
         .eq("student_id", student_id)
         .execute()
     )
+    return response.data
+
+# take attendance in table 
+
+def take_attendance(logs):
+    try:
+        response = (
+            supabase.table("attendance_logs")
+            .insert(logs)
+            .execute()
+        )
+        return True, "Attendance taken successfully."
+    except Exception as e:
+        return False, f"Failed to add attendance : {str(e)}"
+
+
+
+def check_attendance(student_id, subject_id):
+    try:
+        response = (
+            supabase.table("attendance_logs")
+            .select("*")
+            .eq("student_id", student_id)
+            .eq("subject_id", subject_id)
+            .execute()
+        )
+        if response.data:
+            return True, "Attended", response.data[0]
+        else:
+            return False, "Not attended", None
+    except Exception as e:
+        return False, str(e), None
+
+# get all attendance for teacher
+def get_attendance_records(teacher_id):
+    response = supabase.table('attendance_logs').select('*, subjects!inner(*)').eq('subjects.teacher_id', teacher_id).execute()
     return response.data

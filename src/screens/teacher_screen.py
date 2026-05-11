@@ -65,7 +65,7 @@ def teacher_dashboard():
     st.markdown(
         f"""
         <div class="profile-card">
-            <h2>{greeting}, {pronunce}! 👋</h2>
+            <h2>{greeting}, {pronunce}</h2>
             <div class="info">
                  <div>
                     <p>Role: <b>{st.session_state['user_type'].title()}</b></p>
