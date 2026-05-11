@@ -20,7 +20,7 @@ def generate_student_id():
 def student_dashboard():
     student_data = st.session_state.get('student_data', None)
     
-    c1, c2 = st.columns(2, vertical_alignment="center", gap="large")
+    c1, spacer,c2 = st.columns([3, 1, 1], vertical_alignment="center")
     with c1:
         header_dashboard()
 
@@ -96,7 +96,7 @@ def student_dashboard():
         stats_map[s_id]['total'] += 1
         if log.get('is_present'):
             stats_map[s_id]['attended'] += 1
-            
+
     cols = st.columns(2)
     for i, subject_node in enumerate(enrolled_subjects):
         sub = subject_node['subjects']
@@ -122,7 +122,7 @@ def student_dashboard():
 
 # Student Registration Form
 def student_register_form():
-    c1, c2 = st.columns(2, vertical_alignment="center", gap="large")
+    c1, spacer,c2 = st.columns([3, 0.6, 2], vertical_alignment="center")
     with c1:
         header_dashboard()
 
@@ -206,7 +206,7 @@ def student_register_form():
             
         
 def student_login_form():
-    c1, c2 = st.columns(2, vertical_alignment="center", gap="large")
+    c1, spacer,c2 = st.columns([3, 0.6, 2], vertical_alignment="center")
     with c1:
         header_dashboard()
 

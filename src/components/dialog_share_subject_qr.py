@@ -4,7 +4,7 @@ import io
 
 @st.dialog("Share Class Link", width="medium")
 def share_dialog_box(s_name, s_code):
-    app_domain = 'http://localhost:8501'
+    app_domain = 'smartroll-main.streamlit.app/'
     join_url = f"{app_domain}/?join-class={s_code}"
     
     st.subheader(f"Scan to join {s_name}")

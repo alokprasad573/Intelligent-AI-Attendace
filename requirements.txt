@@ -1,3 +1,8 @@
+# Frontend
+streamlit
+watchdog
+
+
 #Utilites
 numpy 
 pandas
@@ -18,10 +23,3 @@ bcrypt
 segno
 pillow
 
-# Frontend
-streamlit
-watchdog
-
-# Voice & Audio Processing
-librosa #audio preprocessor
-resemblyzer #audio model

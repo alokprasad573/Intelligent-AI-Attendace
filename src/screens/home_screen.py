@@ -12,16 +12,16 @@ def home_screen():
     
     with col1:
         st.header("I'm Student")
-        st.image("https://i.ibb.co/844D9Lrt/mascot-student.png", width=120)
-        if st.button('Student Portal', type='primary', icon=':material/arrow_outward:'):
+        st.image("https://i.ibb.co/jvprC8hn/studnet.png", width=200)
+        if st.button('Student Portal', type='primary', icon=':material/arrow_outward:', width="stretch"):
             st.session_state['role']='student'
             st.session_state['student_login_type']='login'
             st.rerun()
 
     with col2:
         st.header("I'm Teacher")
-        st.image("https://i.ibb.co/CsmQQV6X/mascot-prof.png", width=145)
-        if st.button('Teacher Portal', type='primary', icon=':material/arrow_outward:'):
+        st.image("https://i.ibb.co/TDjcB5Lw/teacher-co.png", width=200)
+        if st.button('Teacher Portal', type='primary', icon=':material/arrow_outward:', width="stretch"):
             st.session_state['role']='teacher'
             st.session_state['teacher_login_type']='login'
             st.rerun()

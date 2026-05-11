@@ -21,7 +21,7 @@ def generate_teacher_id():
 def teacher_dashboard():
     teacher_data = st.session_state.get("teacher_data", None)
 
-    c1, c2 = st.columns(2, vertical_alignment="center", gap="large")
+    c1, spacer,c2 = st.columns([3, 1, 1], vertical_alignment="center")
     with c1:
         header_dashboard()
 
@@ -31,7 +31,7 @@ def teacher_dashboard():
             type="secondary",
             icon=":material/logout:",
             key="Logoutbtn",
-            width="stretch",
+            width="content",
         ):
             st.session_state["is_loggedin"] = False
             st.session_state["user_type"] = None
@@ -141,7 +141,7 @@ def teacher_dashboard():
 
 # Teacher Register Part
 def teacher_register_form():
-    c1, c2 = st.columns(2, vertical_alignment="center", gap="large")
+    c1, spacer,c2 = st.columns([3, 0.6, 2], vertical_alignment="center")
     with c1:
         header_dashboard()
 
@@ -263,18 +263,17 @@ def teacher_register_form():
 
 # Teacher Login Part
 def teacher_login_form():
-    c1, c2 = st.columns(2, vertical_alignment="center", gap="large")
+    c1, spacer,c2 = st.columns([3, 0.6, 2], vertical_alignment="center")
 
     with c1:
         header_dashboard()
-
     with c2:
         if st.button(
             "go back to home",
             type="secondary",
             icon=":material/arrow_back:",
             key="loginbackbtn",
-            width="stretch",
+            width='content'
         ):
             st.session_state["role"] = None
             st.rerun()
