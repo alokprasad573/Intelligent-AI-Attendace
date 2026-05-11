@@ -11,7 +11,6 @@ from src.components.attendance_records import attendance_records
 # pyrefly: ignore [missing-import]
 from src.databases.db import create_teacher_account, check_duplicates, teacher_login
 
-
 def generate_teacher_id():
     number = random.randint(1000, 9999)
     tid = "T" + str(number)
@@ -61,12 +60,12 @@ def teacher_dashboard():
     elif 17 <= hour < 20:
         greeting = "Good Evening"
     else:
-        greeting = "Welcome Back"
+        greeting = "Hey there"
 
     st.markdown(
         f"""
         <div class="profile-card">
-            <h2>{greeting},&nbsp; {pronunce} ! </h3>
+            <h2>{greeting}, {pronunce}! 👋</h2>
             <div class="info">
                  <div>
                     <p>Role: <b>{st.session_state['user_type'].title()}</b></p>
@@ -339,7 +338,7 @@ def teacher_screen():
 
     if (
         st.session_state.get("is_loggedin", True)
-        and st.session_state.get("user_type", "teacher")
+        and st.session_state.get("user_type", "") == 'teacher'
         and st.session_state.get("teacher_data", None) is not None
     ):
         teacher_dashboard()

@@ -121,10 +121,6 @@ def student_dashboard():
                 footer_callback=unenroll_button
             )
 
-    
-    
-    
-
 # Student Registration Form
 def student_register_form():
     c1, c2 = st.columns(2, vertical_alignment="center", gap="large")
@@ -219,8 +215,7 @@ def student_register_form():
                 else:
                     st.error(message)
             
-
-# Login Through Face Recognition
+        
 def student_login_form():
     c1, c2 = st.columns(2, vertical_alignment="center", gap="large")
     with c1:
@@ -238,6 +233,7 @@ def student_login_form():
     if picture:
         image = Image.open(picture)
         image_array = np.array(image)
+            
         with st.spinner('AI is scanning...'):
             detected_student, all_students, num_faces = predict_attendance(image_array)
             if num_faces == 0:
@@ -263,7 +259,6 @@ def student_login_form():
                         st.rerun()
     
     
-    
 def student_screen():
     style_background_dashboard()
     style_base_layout()
@@ -275,14 +270,3 @@ def student_screen():
             student_login_form()
         else:
             student_register_form()
-        
-
-            
-                
-            
-                
-                
-                    
-                    
-                
-                    
