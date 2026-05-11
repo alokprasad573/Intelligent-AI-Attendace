@@ -48,9 +48,9 @@ def style_base_layout():
                 
          /* Hide Top Bar of streamlit */
                 
-            #MainMenu, footer, header {
-                visibility: hidden;
-            }
+            # #MainMenu, footer, header {
+            #     visibility: hidden;
+            # }
                 
             .block-container {
                 padding-top:1.5rem !important;    
@@ -104,6 +104,45 @@ def style_base_layout():
 
             button:hover{
                 transform :scale(1.05)}
+
+            .profile-card {
+                background: rgba(255, 255, 255, 0.6) !important;
+                backdrop-filter: blur(12px) !important;
+                -webkit-backdrop-filter: blur(12px) !important;
+                border-radius: 25px !important;
+                padding: 30px !important;
+                margin: 20px 0 !important;
+                box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15) !important;
+                transition: all 0.3s ease !important;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: space-around !important;
+            }
+
+           .info {
+                display: flex !important;
+                flex-direction: row !important;
+                justify-content: space-between !important;
+            }
+
+            .profile-card:hover {
+                transform: translateY(-5px) !important;
+                box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.25) !important;
+            }
+
+
+            .profile-card p {
+                font-size: 1.1rem !important;
+                color: #2c3e50 !important;
+                margin: 8px 0 !important;
+                display: flex !important;
+                align-items: center !important;
+                gap: 10px !important;
+                
+                b {
+                    font-weight: 700 !important;
+                }
+            }
         </style>  
 
                 """
