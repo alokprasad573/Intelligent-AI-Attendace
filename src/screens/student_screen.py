@@ -149,10 +149,12 @@ def student_register_form():
     
         with input_col2:
             s_gender = st.selectbox("Gender", ["Select", "Male", "Female", "Other"])
-
+            
         st.write("Register your face here.")
         picture = st.camera_input("Position your face in the center")
-            
+        
+       
+        
         if st.form_submit_button("Register", icon=":material/app_registration:", type="primary", width="stretch", key="registerbtn"):
             if not picture:
                 st.error("Please capture your face.")
@@ -213,8 +215,8 @@ def student_login_form():
             st.rerun()
     
     st.header("Student Login using FaceID", anchor="center")
-    enable = st.checkbox("Enable camera")
-    picture = st.camera_input("Position your face in the center", disabled=not enable)
+
+    picture = st.camera_input("Position your face in the center")
 
     if picture:
         image = Image.open(picture).convert("RGB")
