@@ -59,7 +59,7 @@ def take_attendance():
         
         if st.session_state.attendance_images:
             
-            if st.button('Run Face Analysis', width='stretch', type='secondary', icon=':material/familiar_face_and_zone:', disabled=not has_photos or selected_subject_id is None):
+            if st.button('Run Face Analysis', width='stretch', type='secondary', icon=':material/familiar_face_and_zone:'):
                 if selected_subject_id is None:
                     st.warning("Please select a subject first.")
                 else:

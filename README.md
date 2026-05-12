@@ -2,7 +2,7 @@
 
 **SmartRoll** is a modern, AI-powered attendance management system that leverages Face Recognition to provide a seamless and secure attendance-tracking experience. Built with Streamlit, Supabase and KNN classifier, it offers dedicated portals for both teachers and students.
 
----
+
 
 ## 🚀 Features
 
@@ -22,7 +22,7 @@
 - **Real-time Database**: Powered by **Supabase** for instant data synchronization.
 - **Glassmorphism UI**: A sleek, modern interface built with Streamlit and custom CSS.
 
----
+
 
 ## 📊 Database Schema
 
@@ -32,7 +32,7 @@ The system uses a robust relational database structure hosted on Supabase.
 
 ![Database Schema](https://i.ibb.co/8DPPSbxz/supabase-schema-pxjnrmqbfzzoxjyhsebf.png)
 
----
+
 
 ## 🧠 Face Recognition Pipeline
 
@@ -57,7 +57,6 @@ graph LR
 ```
 
 
----
 
 ## 🛠️ Tech Stack
 
@@ -68,7 +67,60 @@ graph LR
 - **Backend Logic**: Python
 - **Utilities**: `bcrypt` (Hashing), `segno` (QR Codes), `pandas`, `numpy`
 
----
+
+## 🚀 Application Workthrough
+
+### 🧑‍🎓 Student Portal
+Experience a frictionless academic journey. Students can say goodbye to forgotten passwords—their face is now their key to the classroom.
+
+| Feature | Preview | Description |
+|---|---|---|
+| 🔐 **FaceID Login** | <img src="./static/students/s_1.png" width="250"/> | **Zero-Password Access**: Log in securely using advanced facial recognition. High-speed authentication ensures students are ready for class in seconds. |
+| 📸 **Face Registration** | <img src="./static/students/s_2.png" width="250"/> | **One-Time Setup**: Register facial biometric data through a simple guided process. This creates a secure digital identity for all future sessions. |
+| 📚 **Student Dashboard** | <img src="./static/students/s_3.png" width="250"/> | **Academic Overview**: A personalized hub where students can track enrolled subjects, view attendance history, and manage their profile. |
+
+### 🧑‍🏫 Teacher Portal
+Empowering educators with smart tools to manage classrooms and attendance effortlessly.
+
+| Feature | Preview | Description |
+|---|---|---|
+| 🔐 **Secure Login** | <img src="./static/teachers/t_1.png" width="250"/> | **Authorized Entry**: Robust authentication for teachers using ID and encrypted passwords to protect sensitive student data. |
+| 📝 **Easy Registration** | <img src="./static/teachers/t_2.png" width="250"/> | **Quick Onboarding**: New teachers can join the platform by setting up their academic credentials and personal profiles. |
+| 📊 **Admin Dashboard** | <img src="./static/teachers/t_3.png" width="250"/> | **Command Center**: A central interface to monitor multiple subjects, view student counts, and trigger AI-powered attendance sessions. |
+
+### 📸 Smart AI Attendance
+The core of the system—automating the tedious task of roll calls using state-of-the-art computer vision.
+
+| Feature | Preview | Description |
+|---------|---------|-------------|
+| 📚 **Session Start** | <img src="./static/teachers/t_3.png" width="300"/> | **Seamless Integration**: Select the specific subject and section to initiate an attendance session with a single click. |
+| 📸 **Capture/Upload** | <img src="./static/teachers/t_3.1.png" width="300"/> | **Flexible Input**: Use a live camera feed or upload a high-resolution classroom photo. The AI handles group environments with ease. |
+| ✅ **AI Verification** | <img src="./static/teachers/t_3.2.png" width="300"/> | **Instant Recognition**: The pipeline detects every student in the frame, highlighting recognized faces and flagging unknown individuals for review. |
+| 📊 **Records Sync** | <img src="./static/teachers/t_5.png" width="300"/> | **Automatic Logging**: Recognized students are instantly marked as 'Present' in the database, creating a reliable and automated attendance trail. |
+
+### 🛠️ Course Management
+Streamlined subject administration and student enrollment using modern sharing tools.
+
+| Feature | Preview | Description |
+|---------|---------|-------------|
+| 📚 **Subject Insights** | <img src="./static/teachers/t_4.png" width="300"/> | **Data-Driven View**: Detailed metrics for each subject, including enrollment counts, section identifiers, and historical attendance trends. |
+| 📸 **Quick Enrollment** | <img src="./static/teachers/t_4.1.png" width="300"/> | **Instant Join via QR**: Generate unique QR codes and shareable links. Students can join classes instantly by scanning, eliminating manual entry errors. |
+
+## 📂 Project Structure
+
+```text
+├── .streamlit/          # Streamlit configuration & secrets
+├── src/
+│   ├── components/      # Reusable UI components
+│   ├── databases/       # Database connection & queries
+│   ├── pipelines/       # AI logic (Face & Voice recognition)
+│   ├── screens/         # Page layouts (Home, Teacher, Student)
+│   └── ui/              # Custom CSS and styling
+├── static/              # Image assets & previews
+├── app.py               # Main entry point
+├── requirements.txt     # Python dependencies
+└── README.md            # Project documentation
+```
 
 ## ⚙️ Installation & Setup
 
@@ -102,22 +154,6 @@ SUPABASE_PASSW = "your_database_password"
 streamlit run app.py
 ```
 
----
-
-## 📂 Project Structure
-
-```text
-├── .streamlit/          # Streamlit configuration & secrets
-├── src/
-│   ├── components/      # Reusable UI components
-│   ├── databases/       # Database connection & queries
-│   ├── pipelines/       # AI logic (Face & Voice recognition)
-│   ├── screens/         # Page layouts (Home, Teacher, Student)
-│   └── ui/              # Custom CSS and styling
-├── app.py               # Main entry point
-├── requirements.txt     # Python dependencies
-└── README.md            # Project documentation
-```
 
 ---
 
