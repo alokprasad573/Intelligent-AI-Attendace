@@ -126,7 +126,7 @@ Streamlined subject administration and student enrollment using modern sharing t
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/your-username/Intelligent-AI-Attendance.git
+git clone https://github.com/alokprasad573/Intelligent-AI-Attendance.git
 cd Intelligent-AI-Attendance
 ```
 
